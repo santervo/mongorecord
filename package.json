@@ -14,5 +14,11 @@
     "record"
   ],
   "author": "Santtu Lintervo",
-  "license": "BSD"
+  "license": "BSD",
+  "dependencies": {
+    "underscore": "~1.4.4"
+  },
+  "devDependencies": {
+    "mocha": "~1.8.1"
+  }
 }
