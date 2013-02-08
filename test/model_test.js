@@ -3,8 +3,10 @@ var Model = require('../lib/model');
 describe('Model', function() {
   var Issue = Model.extend({
     properties: {
-      name: String
-    }
+      title: String,
+      updated_at: Date
+    },
+    protectedProperties: ["updated_at"]
   });
 
   describe('set', function() {
@@ -16,12 +18,20 @@ describe('Model', function() {
       assert.equal(undefined, obj.get('foo'));
     });
 
+    it('should not set protected property', function() {
+      var obj = new Issue();
+
+      obj.set({updated_at: new Date});
+
+      assert.equal(undefined, obj.get('updated_at'));
+    });
+
     it('should set defined property', function() {
       var obj = new Issue();
 
-      obj.set({name: 'Foo'});
+      obj.set({title: 'Foo'});
 
-      assert.equal('Foo', obj.get('name'));
+      assert.equal('Foo', obj.get('title'));
     });
   });
 });
