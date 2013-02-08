@@ -1,27 +1,27 @@
-var Model = require("../lib/model");
+var Model = require('../lib/model');
 
-describe("Model", function() {
+describe('Model', function() {
   var Issue = Model.extend({
     properties: {
       name: String
     }
   });
 
-  describe("merge", function() {
-    it("should not merge undefined property", function() {
+  describe('merge', function() {
+    it('should not merge undefined property', function() {
       var obj = new Issue();
 
-      obj.merge({foo: "Foo"});
+      obj.merge({foo: 'Foo'});
 
-      assert.equal(undefined, obj.foo);
+      assert.equal(undefined, obj.get('foo'));
     });
 
-    it("should merge defined property", function() {
+    it('should merge defined property', function() {
       var obj = new Issue();
 
-      obj.merge({name: "Foo"});
+      obj.merge({name: 'Foo'});
 
-      assert.equal("Foo", obj.name);
+      assert.equal('Foo', obj.get('name'));
     });
   });
 });
