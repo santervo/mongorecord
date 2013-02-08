@@ -7,19 +7,19 @@ describe('Model', function() {
     }
   });
 
-  describe('merge', function() {
-    it('should not merge undefined property', function() {
+  describe('set', function() {
+    it('should not set undefined property', function() {
       var obj = new Issue();
 
-      obj.merge({foo: 'Foo'});
+      obj.set({foo: 'Foo'});
 
       assert.equal(undefined, obj.get('foo'));
     });
 
-    it('should merge defined property', function() {
+    it('should set defined property', function() {
       var obj = new Issue();
 
-      obj.merge({name: 'Foo'});
+      obj.set({name: 'Foo'});
 
       assert.equal('Foo', obj.get('name'));
     });
