@@ -4,9 +4,11 @@ describe('Model', function() {
   var Issue = Model.extend({
     properties: {
       title: String,
-      updated_at: Date
-    },
-    protectedProperties: ["updated_at"]
+      updated_at: {
+        type: Date,
+        protected: true
+      }
+    }
   });
 
   describe('set', function() {
