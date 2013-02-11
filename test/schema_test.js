@@ -3,7 +3,6 @@ var Schema = require('../lib/schema');
 describe('Schema', function() {
 
   describe('sanitizeData', function() {
-
     it('should remove undefined property', function() {
       var schema = new Schema({});
 
@@ -68,6 +67,64 @@ describe('Schema', function() {
 
       assert.equal(123.45, result.attr);
     });
-
   })
+
+  describe('validate', function() {
+    describe('String', function() {
+      var schema = new Schema({
+        attr: String
+      });
+
+      it('should not fail if attr is String', function(done) {
+        schema.validate({attr: ""}, function(err) {
+          assert(err === null);
+          done();
+        })
+      });
+
+      it('should not fail if attr is null', function(done) {
+        schema.validate({attr: null}, function(err) {
+          assert(err === null);
+          done();
+        })
+      });
+
+      it('should fail if attr is not String', function(done) {
+        schema.validate({attr: 1}, function(err) {
+          assert(err);
+          assert.equal(err.errors.attr, "is not a String");
+          done();
+        })
+      });
+    });
+
+    describe('Number', function() {
+      var schema = new Schema({
+        attr: Number
+      });
+
+      it('should not fail if attr is Number', function(done) {
+        schema.validate({attr: 1}, function(err) {
+          assert(err == null);
+          done();
+        });
+      });
+
+      it('should fail if attr is not Number', function(done) {
+        schema.validate({attr: "XXX"}, function(err) {
+          assert(err);
+          assert.equal(err.errors.attr, "is not a Number");
+          done();
+        });
+      });
+ 
+      it('should fail if attr is NaN', function(done) {
+        schema.validate({attr: new Number("XXX")}, function(err) {
+          assert(err);
+          assert.equal(err.errors.attr, "is not a Number");
+          done();
+        });
+      });
+    });
+  });
 });
