@@ -126,5 +126,55 @@ describe('Schema', function() {
         });
       });
     });
+
+    describe('Date', function() {
+      var schema = new Schema({
+        attr: Date
+      });
+
+      it('should not fail if attr is Date', function(done) {
+        schema.validate({attr: new Date}, function(err) {
+          assert(err == null);
+          done();
+        });
+      });
+
+      it('should fail if attr is not Date', function(done) {
+        schema.validate({attr: "2012-01-01T10:00:00Z"}, function(err) {
+          assert(err);
+          assert.equal(err.errors.attr, "is not a Date");
+          done();
+        });
+      });
+ 
+      it('should fail if attr is invalid Date', function(done) {
+        schema.validate({attr: new Date("XXX")}, function(err) {
+          assert(err);
+          assert.equal(err.errors.attr, "is not a Date");
+          done();
+        });
+      });
+    });
+
+    describe('Boolean', function() {
+      var schema = new Schema({
+        attr: Boolean
+      });
+
+      it('should not fail if attr is Boolean', function(done) {
+        schema.validate({attr: true}, function(err) {
+          assert(err == null);
+          done();
+        });
+      });
+
+      it('should fail if attr is not Boolean', function(done) {
+        schema.validate({attr: "true"}, function(err) {
+          assert(err);
+          assert.equal(err.errors.attr, "is not a Boolean");
+          done();
+        });
+      });
+    });
   });
 });
