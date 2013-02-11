@@ -11,37 +11,20 @@ describe('Model', function() {
   });
 
   describe('set', function() {
-    it('should not set undefined property', function() {
+    it('should sanitize data', function() {
       var obj = new Issue();
 
-      obj.set({foo: 'Foo'});
+      obj.set({
+        title: 'Bar',
+        foo: 'Foo',
+        scheduled_date: '2012-01-01T10:00:00Z',
+        updated_at: '2012-01-01T10:00:00Z'
+      });
 
+      assert.equal('Bar', obj.get('title'));
       assert.equal(undefined, obj.get('foo'));
-    });
-
-    it('should not set protected property', function() {
-      var obj = new Issue();
-
-      obj.set({updated_at: new Date});
-
+      assert.equal(new Date('2012-01-01T10:00:00Z').getTime(), obj.get('scheduled_date').getTime());
       assert.equal(undefined, obj.get('updated_at'));
-    });
-
-    it('should set defined property', function() {
-      var obj = new Issue();
-
-      obj.set({title: 'Foo'});
-
-      assert.equal('Foo', obj.get('title'));
-    });
-
-    it('should cast string to date', function() {
-      var obj = new Issue();
-
-      obj.set({scheduled_date: '2013-02-09T17:16:03.860Z'});
-
-      assert(obj.get('scheduled_date') instanceof Date);
-      assert.equal(new Date('2013-02-09T17:16:03.860Z').getTime(), obj.get('scheduled_date').getTime());
     });
   });
 });
