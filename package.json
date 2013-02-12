@@ -16,7 +16,9 @@
   "author": "Santtu Lintervo",
   "license": "BSD",
   "dependencies": {
-    "underscore": "~1.4.4"
+    "underscore": "~1.4.4",
+    "mongodb": "~1.2.11",
+    "bson": "~0.1.6"
   },
   "devDependencies": {
     "mocha": "~1.8.1"

@@ -1,4 +1,5 @@
-var Schema = require('../lib/schema');
+var Schema = require('../lib/schema'),
+    ObjectID = require('../lib/objectid');
 
 describe('Schema', function() {
 
@@ -66,6 +67,22 @@ describe('Schema', function() {
       var result = schema.sanitizeData({attr: "123.45"});
 
       assert.equal(123.45, result.attr);
+    });
+
+    it('should cast string to ObjectID', function() {
+      var schema = new Schema({attr: ObjectID});
+
+      var result = schema.sanitizeData({attr: "507f1f77bcf86cd799439011"});
+
+      assert(result.attr instanceof ObjectID);
+    });
+
+    it('should not cast illegal string to ObjectID', function() {
+      var schema = new Schema({attr: ObjectID});
+
+      var result = schema.sanitizeData({attr: "invalidobjectid"});
+
+      assert.equal("invalidobjectid", result.attr);
     });
   })
 
@@ -172,6 +189,27 @@ describe('Schema', function() {
         schema.validate({attr: "true"}, function(err) {
           assert(err);
           assert.equal(err.errors.attr, "is not a Boolean");
+          done();
+        });
+      });
+    });
+
+    describe('ObjectID', function() {
+      var schema = new Schema({
+        attr: ObjectID
+      });
+
+      it('should not fail if attr is ObjectID', function(done) {
+        schema.validate({attr: new ObjectID()}, function(err) {
+          assert(err == null);
+          done();
+        });
+      });
+
+      it('should fail if attr is not ObjectID', function(done) {
+        schema.validate({attr: "511a924001e62bdc56000001"}, function(err) {
+          assert(err);
+          assert.equal(err.errors.attr, "is not an ObjectID");
           done();
         });
       });
