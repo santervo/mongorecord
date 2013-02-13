@@ -84,7 +84,28 @@ describe('Schema', function() {
 
       assert.equal("invalidobjectid", result.attr);
     });
-  })
+
+    it('should sanitize embedded Object', function() {
+      var schema = new Schema({
+        embeddedObject: {
+          type: Object,
+          properties: {
+            attr: Number,
+            protectedAttr: { type: String, protected: true }
+          }
+        }
+      });
+
+      var result = schema.sanitizeData({
+        embeddedObject: {
+          attr: "1",
+          protectedAttr: "FOO"
+        }
+      });
+
+      assert.deepEqual({"embeddedObject": {"attr": new Number(1)}}, result);
+    });
+  });
 
   describe('validate', function() {
     describe('String', function() {
@@ -210,6 +231,25 @@ describe('Schema', function() {
         schema.validate({attr: "511a924001e62bdc56000001"}, function(err) {
           assert(err);
           assert.equal(err.errors.attr, "is not an ObjectID");
+          done();
+        });
+      });
+    });
+
+    describe('Object', function() {
+      var schema = new Schema({
+        embeddedObject: {
+          type: Object,
+          properties: {
+            attr: Number
+          }
+        }
+      });
+
+      it('should validate embedded properties', function(done) {
+        schema.validate({embeddedObject: {attr: "FOO"}}, function(err) {
+          assert(err);
+          assert.deepEqual({errors: {embeddedObject: {attr: "is not a Number"}}}, err);
           done();
         });
       });
