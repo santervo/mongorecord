@@ -105,6 +105,41 @@ describe('Schema', function() {
 
       assert.deepEqual({"embeddedObject": {"attr": new Number(1)}}, result);
     });
+
+    it('should sanitize Array of embedded Strings', function() {
+      var schema = new Schema({
+        arr: {
+          type: Array,
+          item_type: String
+        }
+      });
+
+      var result = schema.sanitizeData({arr: [1, "BAR"]});
+
+      assert.deepEqual({arr: [new String("1"), new String("BAR")]}, result);
+    });
+
+    it('should sanitize Array of embedded Objects', function() {
+      var schema = new Schema({
+        arr: {
+          type: Array,
+          item_type: Object,
+          item_properties: {
+            attr: Number,
+            protectedAttr: { type: String, protected: true }
+          }
+        }
+      });
+
+      var result = schema.sanitizeData({
+        arr: [{
+          attr: "1",
+          protectedAttr: "FOO"
+        }]
+      });
+
+      assert.deepEqual({arr: [{"attr": new Number(1)}]}, result);
+    });
   });
 
   describe('validate', function() {
@@ -246,10 +281,43 @@ describe('Schema', function() {
         }
       });
 
-      it('should validate embedded properties', function(done) {
+      it('should include errors for embedded properties', function(done) {
         schema.validate({embeddedObject: {attr: "FOO"}}, function(err) {
           assert(err);
           assert.deepEqual({errors: {embeddedObject: {attr: "is not a Number"}}}, err);
+          done();
+        });
+      });
+
+      it('should not include errors for valid embedded Object', function(done) {
+        schema.validate({embeddedObject: {attr: 1}}, function(err) {
+          assert(!err);
+          done();
+        });
+      });
+    });
+
+    describe('Array', function() {
+      var schema = new Schema({
+        arr: {
+          type: Array,
+          item_type: Object,
+          item_properties: {
+            attr: Number
+          }
+        }
+      });
+
+      it('should validate contained objects', function(done) {
+        schema.validate({arr: [{attr: 1},{attr: "FOO"}]}, function(err) {
+          assert.deepEqual({errors: {arr: {1: {attr: "is not a Number"}}}}, err);
+          done();
+        });
+      });
+
+      it('should not include errors for valid contained objects', function(done) {
+        schema.validate({arr: [{attr: 1},{attr: 2.5}]}, function(err) {
+          assert(!err);
           done();
         });
       });
