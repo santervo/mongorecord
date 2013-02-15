@@ -91,7 +91,7 @@ describe('Schema', function() {
           type: Object,
           properties: {
             attr: Number,
-            protectedAttr: { type: String, protected: true }
+          protectedAttr: { type: String, protected: true }
           }
         }
       });
@@ -126,7 +126,7 @@ describe('Schema', function() {
           item_type: Object,
           item_properties: {
             attr: Number,
-            protectedAttr: { type: String, protected: true }
+          protectedAttr: { type: String, protected: true }
           }
         }
       });
@@ -148,26 +148,20 @@ describe('Schema', function() {
         attr: String
       });
 
-      it('should not fail if attr is String', function(done) {
-        schema.validate({attr: ""}, function(err) {
-          assert(err === null);
-          done();
-        })
+      it('should not fail if attr is String', function() {
+        var err = schema.validate({attr: ""});
+        assert(err === null);
       });
 
-      it('should not fail if attr is null', function(done) {
-        schema.validate({attr: null}, function(err) {
-          assert(err === null);
-          done();
-        })
+      it('should not fail if attr is null', function() {
+        var err = schema.validate({attr: null});
+        assert(err === null);
       });
 
-      it('should fail if attr is not String', function(done) {
-        schema.validate({attr: 1}, function(err) {
-          assert(err);
-          assert.equal(err.errors.attr, "is not a String");
-          done();
-        })
+      it('should fail if attr is not String', function() {
+        var err = schema.validate({attr: 1});
+        assert(err);
+        assert.equal(err.errors.attr, "is not a String");
       });
     });
 
@@ -176,27 +170,21 @@ describe('Schema', function() {
         attr: Number
       });
 
-      it('should not fail if attr is Number', function(done) {
-        schema.validate({attr: 1}, function(err) {
-          assert(err == null);
-          done();
-        });
+      it('should not fail if attr is Number', function() {
+        var err = schema.validate({attr: 1});
+        assert(err == null);
       });
 
-      it('should fail if attr is not Number', function(done) {
-        schema.validate({attr: "XXX"}, function(err) {
-          assert(err);
-          assert.equal(err.errors.attr, "is not a Number");
-          done();
-        });
+      it('should fail if attr is not Number', function() {
+        var err = schema.validate({attr: "XXX"});
+        assert(err);
+        assert.equal(err.errors.attr, "is not a Number");
       });
- 
-      it('should fail if attr is NaN', function(done) {
-        schema.validate({attr: new Number("XXX")}, function(err) {
-          assert(err);
-          assert.equal(err.errors.attr, "is not a Number");
-          done();
-        });
+
+      it('should fail if attr is NaN', function() {
+        var err = schema.validate({attr: new Number("XXX")});
+        assert(err);
+        assert.equal(err.errors.attr, "is not a Number");
       });
     });
 
@@ -205,27 +193,21 @@ describe('Schema', function() {
         attr: Date
       });
 
-      it('should not fail if attr is Date', function(done) {
-        schema.validate({attr: new Date}, function(err) {
-          assert(err == null);
-          done();
-        });
+      it('should not fail if attr is Date', function() {
+        var err = schema.validate({attr: new Date});
+        assert(err == null);
       });
 
-      it('should fail if attr is not Date', function(done) {
-        schema.validate({attr: "2012-01-01T10:00:00Z"}, function(err) {
-          assert(err);
-          assert.equal(err.errors.attr, "is not a Date");
-          done();
-        });
+      it('should fail if attr is not Date', function() {
+        var err = schema.validate({attr: "2012-01-01T10:00:00Z"});
+        assert(err);
+        assert.equal(err.errors.attr, "is not a Date");
       });
- 
-      it('should fail if attr is invalid Date', function(done) {
-        schema.validate({attr: new Date("XXX")}, function(err) {
-          assert(err);
-          assert.equal(err.errors.attr, "is not a Date");
-          done();
-        });
+
+      it('should fail if attr is invalid Date', function() {
+        var err = schema.validate({attr: new Date("XXX")});
+        assert(err);
+        assert.equal(err.errors.attr, "is not a Date");
       });
     });
 
@@ -234,19 +216,15 @@ describe('Schema', function() {
         attr: Boolean
       });
 
-      it('should not fail if attr is Boolean', function(done) {
-        schema.validate({attr: true}, function(err) {
-          assert(err == null);
-          done();
-        });
+      it('should not fail if attr is Boolean', function() {
+        var err = schema.validate({attr: true});
+        assert(err == null);
       });
 
-      it('should fail if attr is not Boolean', function(done) {
-        schema.validate({attr: "true"}, function(err) {
-          assert(err);
-          assert.equal(err.errors.attr, "is not a Boolean");
-          done();
-        });
+      it('should fail if attr is not Boolean', function() {
+        var err = schema.validate({attr: "true"});
+        assert(err);
+        assert.equal(err.errors.attr, "is not a Boolean");
       });
     });
 
@@ -255,19 +233,15 @@ describe('Schema', function() {
         attr: ObjectID
       });
 
-      it('should not fail if attr is ObjectID', function(done) {
-        schema.validate({attr: new ObjectID()}, function(err) {
-          assert(err == null);
-          done();
-        });
+      it('should not fail if attr is ObjectID', function() {
+        var err = schema.validate({attr: new ObjectID()});
+        assert(err == null);
       });
 
-      it('should fail if attr is not ObjectID', function(done) {
-        schema.validate({attr: "511a924001e62bdc56000001"}, function(err) {
-          assert(err);
-          assert.equal(err.errors.attr, "is not an ObjectID");
-          done();
-        });
+      it('should fail if attr is not ObjectID', function() {
+        var err = schema.validate({attr: "511a924001e62bdc56000001"});
+        assert(err);
+        assert.equal(err.errors.attr, "is not an ObjectID");
       });
     });
 
@@ -281,19 +255,15 @@ describe('Schema', function() {
         }
       });
 
-      it('should include errors for embedded properties', function(done) {
-        schema.validate({embeddedObject: {attr: "FOO"}}, function(err) {
-          assert(err);
-          assert.deepEqual({errors: {embeddedObject: {attr: "is not a Number"}}}, err);
-          done();
-        });
+      it('should include errors for embedded properties', function() {
+        var err = schema.validate({embeddedObject: {attr: "FOO"}});
+        assert(err);
+        assert.deepEqual({errors: {embeddedObject: {attr: "is not a Number"}}}, err);
       });
 
-      it('should not include errors for valid embedded Object', function(done) {
-        schema.validate({embeddedObject: {attr: 1}}, function(err) {
-          assert(!err);
-          done();
-        });
+      it('should not include errors for valid embedded Object', function() {
+        var err = schema.validate({embeddedObject: {attr: 1}});
+        assert(!err);
       });
     });
 
@@ -308,18 +278,14 @@ describe('Schema', function() {
         }
       });
 
-      it('should validate contained objects', function(done) {
-        schema.validate({arr: [{attr: 1},{attr: "FOO"}]}, function(err) {
-          assert.deepEqual({errors: {arr: {1: {attr: "is not a Number"}}}}, err);
-          done();
-        });
+      it('should validate contained objects', function() {
+        var err = schema.validate({arr: [{attr: 1},{attr: "FOO"}]});
+        assert.deepEqual({errors: {arr: {1: {attr: "is not a Number"}}}}, err);
       });
 
-      it('should not include errors for valid contained objects', function(done) {
-        schema.validate({arr: [{attr: 1},{attr: 2.5}]}, function(err) {
-          assert(!err);
-          done();
-        });
+      it('should not include errors for valid contained objects', function() {
+        var err = schema.validate({arr: [{attr: 1},{attr: 2.5}]});
+        assert(!err);
       });
     });
   });
