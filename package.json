@@ -1,7 +1,7 @@
 {
   "name": "mongorecord",
   "version": "0.0.0",
-  "description": "Mongo DB Active Record library for Node.js",
+  "description": "Mongo DB Active Record for Node.js",
   "main": "index.js",
   "scripts": {
     "test": "make test"
