@@ -3,11 +3,11 @@ var Schema = require('../lib/schema'),
 
 describe('Schema', function() {
 
-  describe('sanitizeData', function() {
+  describe('sanitize', function() {
     it('should remove undefined property', function() {
       var schema = new Schema({});
 
-      var result = schema.sanitizeData({attr: "Foo"});
+      var result = schema.sanitize({attr: "Foo"});
 
       assert.equal(undefined, result.attr);
     });
@@ -15,7 +15,7 @@ describe('Schema', function() {
     it('should remove protected property', function() {
       var schema = new Schema({attr: {type: String, protected: true}});
 
-      var result = schema.sanitizeData({attr: "Foo"});
+      var result = schema.sanitize({attr: "Foo"});
 
       assert.equal(undefined, result.attr);
     });
@@ -23,7 +23,7 @@ describe('Schema', function() {
     it('should include unprotected property', function() {
       var schema = new Schema({attr: String});
 
-      var result = schema.sanitizeData({attr: "Foo"});
+      var result = schema.sanitize({attr: "Foo"});
 
       assert.equal("Foo", result.attr);
     });
@@ -31,7 +31,7 @@ describe('Schema', function() {
     it('should not cast null to String', function() {
       var schema = new Schema({attr: String});
 
-      var result = schema.sanitizeData({attr: null});
+      var result = schema.sanitize({attr: null});
 
       assert.equal(null, result.attr);
     });
@@ -39,7 +39,7 @@ describe('Schema', function() {
     it('should not cast empty string to null', function() {
       var schema = new Schema({attr: String});
 
-      var result = schema.sanitizeData({attr: ""});
+      var result = schema.sanitize({attr: ""});
 
       assert.equal("", result.attr);
     });
@@ -47,7 +47,7 @@ describe('Schema', function() {
     it('should cast number to String', function() {
       var schema = new Schema({attr: String});
 
-      var result = schema.sanitizeData({attr: 1});
+      var result = schema.sanitize({attr: 1});
 
       assert.equal("1", result.attr);
     });
@@ -55,7 +55,7 @@ describe('Schema', function() {
     it('should cast iso date string to Date', function() {
       var schema = new Schema({attr: Date});
 
-      var result = schema.sanitizeData({attr: "2012-01-01T10:00:00Z"});
+      var result = schema.sanitize({attr: "2012-01-01T10:00:00Z"});
 
       assert(result.attr instanceof Date);
       assert.equal(new Date('2012-01-01T10:00:00Z').getTime(), result.attr.getTime());
@@ -64,7 +64,7 @@ describe('Schema', function() {
     it('should cast string to Number', function() {
       var schema = new Schema({attr: Number});
 
-      var result = schema.sanitizeData({attr: "123.45"});
+      var result = schema.sanitize({attr: "123.45"});
 
       assert.equal(123.45, result.attr);
     });
@@ -72,7 +72,7 @@ describe('Schema', function() {
     it('should cast string to ObjectID', function() {
       var schema = new Schema({attr: ObjectID});
 
-      var result = schema.sanitizeData({attr: "507f1f77bcf86cd799439011"});
+      var result = schema.sanitize({attr: "507f1f77bcf86cd799439011"});
 
       assert(result.attr instanceof ObjectID);
     });
@@ -80,7 +80,7 @@ describe('Schema', function() {
     it('should not cast illegal string to ObjectID', function() {
       var schema = new Schema({attr: ObjectID});
 
-      var result = schema.sanitizeData({attr: "invalidobjectid"});
+      var result = schema.sanitize({attr: "invalidobjectid"});
 
       assert.equal("invalidobjectid", result.attr);
     });
@@ -96,7 +96,7 @@ describe('Schema', function() {
         }
       });
 
-      var result = schema.sanitizeData({
+      var result = schema.sanitize({
         embeddedObject: {
           attr: "1",
           protectedAttr: "FOO"
@@ -114,7 +114,7 @@ describe('Schema', function() {
         }
       });
 
-      var result = schema.sanitizeData({arr: [1, "BAR"]});
+      var result = schema.sanitize({arr: [1, "BAR"]});
 
       assert.deepEqual({arr: [new String("1"), new String("BAR")]}, result);
     });
@@ -131,7 +131,7 @@ describe('Schema', function() {
         }
       });
 
-      var result = schema.sanitizeData({
+      var result = schema.sanitize({
         arr: [{
           attr: "1",
           protectedAttr: "FOO"
